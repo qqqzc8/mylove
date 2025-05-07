@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我们的爱情日记</title>
+    <style>
+        :root {
+            --primary-color: #ff6b8b;
+            --secondary-color: #ffb8c6;
+            --text-color: #333;
+            --light-color: #fff9fa;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .couple-names {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        
+        .love-date {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 导航栏样式 */
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .nav-link {
+            padding: 1rem 1.5rem;
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color);
+            background-color: var(--light-color);
+        }
+        
+        /* 各部分通用样式 */
+        .section {
+            padding: 3rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            position: relative;
+        }
+        
+        .section-title:after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: var(--secondary-color);
+            margin: 10px auto;
+        }
+        
+        /* 时光轴样式 */
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+        
+        .timeline:before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background-color: var(--secondary-color);
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1px;
+        }
+        
+        .timeline-item {
+            padding: 10px 40px;
+            position: relative;
+            width: 50%;
+            box-sizing: border-box;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+        
+        .timeline-content {
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .timeline-date {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            top: 30px;
+            right: -8px;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-dot {
+            left: -8px;
+        }
+        
+        /* 照片墙样式 */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            aspect-ratio: 1/1;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.03);
+        }
+        
+        .gallery-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+        
+        .gallery-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 10px;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover .gallery-caption {
+            transform: translateY(0);
+        }
+        
+        /* 纪念日样式 */
+        .milestones {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .milestone-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 280px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .milestone-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .milestone-title {
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .milestone-date {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .countdown {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+        
+        /* 留言板样式 */
+        .message-board {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        
+        .message-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .submit-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+        
+        .submit-btn:hover {
+            background: #ff5577;
+        }
+        
+        .messages {
+            margin-top: 30px;
+        }
+        
+        .message {
+            background: var(--light-color);
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .message-author {
+            color: var(--primary-color);
+        }
+        
+        .message-date {
+            color: #777;
+            font-size: 0.9rem;
+        }
+        
+        /* 音乐播放器样式 */
+        .music-player {
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .music-info {
+            margin-bottom: 20px;
+        }
+        
+        .music-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+        
+        .music-artist {
+            color: #777;
+        }
+        
+        .player-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .control-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .control-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        /* 页脚样式 */
+        footer {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        .footer-heart {
+            color: white;
+            font-size: 1.5rem;
+            margin: 0 5px;
+            animation: heartbeat 1.5s infinite;
+            display: inline-block;
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .timeline:before {
+                left: 31px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 25px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-dot {
+                left: 23px;
+            }
+            
+            .couple-names {
+                font-size: 2rem;
+            }
+            
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+        
+        /* 密码保护样式 */
+        .password-protection {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .password-box {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+        
+        .password-box h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .password-input {
+            padding: 12px;
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        
+        .password-submit {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+        
+        .password-submit:hover {
+            background: #ff5577;
+        }
+    </style>
+</head>
+<body>
+    <!-- 密码保护层 -->
+    <div class="password-protection" id="passwordProtection">
+        <div class="password-box">
+            <h2>爱的密码</h2>
+            <p>请输入密码查看我们的专属空间</p>
+            <input type="password" class="password-input" id="passwordInput" placeholder="输入密码">
+            <button class="password-submit" id="passwordSubmit">进入</button>
+        </div>
+    </div>
+
+    <!-- 网站内容 -->
+    <div id="websiteContent" style="display: none;">
+        <header>
+            <div class="container">
+                <h1 class="couple-names">钱志冲 ❤️ 汤金凤</h1>
+                <p class="love-date">从 2020年5月20日 开始的故事</p>
+            </div>
+        </header>
+        
+        <nav>
+            <div class="nav-container">
+                <a href="#timeline" class="nav-link">时光轴</a>
+                <a href="#gallery" class="nav-link">照片墙</a>
+                <a href="#milestones" class="nav-link">纪念日</a>
+                <a href="#messages" class="nav-link">留言板</a>
+                <a href="#music" class="nav-link">我们的歌</a>
+            </div>
+        </nav>
+        
+        <div class="container">
+            <!-- 时光轴部分 -->
+            <section id="timeline" class="section">
+                <h2 class="section-title">我们的时光轴</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2020年5月20日</div>
+                            <p>我们第一次相遇，在学校的樱花树下，你穿着白色的连衣裙，那一刻我就知道，你就是我要找的人。</p>
+                            <div class="timeline-dot"></div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2020年8月15日</div>
+                            <p>第一次约会，我们去了游乐园，你害怕坐过山车但还是陪我一起，下来后你紧紧抓着我的手不放。</p>
+                            <div class="timeline-dot"></div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2021年1月1日</div>
+                            <p>新年倒计时，在烟花下你答应做我的女朋友，那是我人生中最美好的跨年夜。</p>
+                            <div class="timeline-dot"></div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2021年7月10日</div>
+                            <p>我们第一次一起旅行，去了海边。你穿着比基尼害羞的样子，我永远都忘不了。</p>
+                            <div class="timeline-dot"></div>
+                        </div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">2022年2月14日</div>
+                            <p>情人节，我向你求婚了！虽然戒指不贵，但你哭得像个孩子，说这是你最幸福的一天。</p>
+                            <div class="timeline-dot"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 照片墙部分 -->
+            <section id="gallery" class="section">
+                <h2 class="section-title">我们的照片墙</h2>
+                <div class="gallery">
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="我们的合照" class="gallery-img">
+                        <div class="gallery-caption">第一次约会</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1529333164857-423483e56a97?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="旅行照片" class="gallery-img">
+                        <div class="gallery-caption">海边旅行</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="日常照片" class="gallery-img">
+                        <div class="gallery-caption">周末野餐</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1529333164857-423483e56a97?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="节日照片" class="gallery-img">
+                        <div class="gallery-caption">圣诞节</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="纪念日照片" class="gallery-img">
+                        <div class="gallery-caption">一周年纪念</div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="生活照" class="gallery-img">
+                        <div class="gallery-caption">日常时光</div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 纪念日部分 -->
+            <section id="milestones" class="section">
+                <h2 class="section-title">重要纪念日</h2>
+                <div class="milestones">
+                    <div class="milestone-card">
+                        <div class="milestone-title">相识纪念日</div>
+                        <div class="milestone-date">2020年5月20日</div>
+                        <div class="countdown" id="met-countdown"></div>
+                    </div>
+                    <div class="milestone-card">
+                        <div class="milestone-title">恋爱纪念日</div>
+                        <div class="milestone-date">2021年1月1日</div>
+                        <div class="countdown" id="love-countdown"></div>
+                    </div>
+                    <div class="milestone-card">
+                        <div class="milestone-title">求婚纪念日</div>
+                        <div class="milestone-date">2022年2月14日</div>
+                        <div class="countdown" id="propose-countdown"></div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 留言板部分 -->
+            <section id="messages" class="section">
+                <h2 class="section-title">爱的留言板</h2>
+                <div class="message-board">
+                    <div class="message-form">
+                        <div class="form-group">
+                            <label for="message-author">你的名字</label>
+                            <input type="text" id="message-author" placeholder="输入你的名字">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-content">留言内容</label>
+                            <textarea id="message-content" placeholder="写下你想说的话..."></textarea>
+                        </div>
+                        <button class="submit-btn" id="message-submit">留下爱的留言</button>
+                    </div>
+                    <div class="messages" id="message-list">
+                        <!-- 留言将在这里动态生成 -->
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 音乐播放器部分 -->
+            <section id="music" class="section">
+                <h2 class="section-title">我们的歌</h2>
+                <div class="music-player">
+                    <div class="music-info">
+                        <div class="music-title">Perfect</div>
+                        <div class="music-artist">Ed Sheeran</div>
+                    </div>
+                    <audio id="love-song" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+                    <div class="player-controls">
+                        <button class="control-btn" id="play-btn">▶</button>
+                        <button class="control-btn" id="pause-btn">⏸</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <footer>
+            <div class="container">
+                <p>钱志冲 <span class="footer-heart">❤️</span> 汤金凤</p>
+                <p>我们的爱情故事还在继续...</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // 密码保护功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const correctPassword = "5201314"; // 默认密码，你可以修改
+            const passwordProtection = document.getElementById('passwordProtection');
+            const passwordInput = document.getElementById('passwordInput');
+            const passwordSubmit = document.getElementById('passwordSubmit');
+            const websiteContent = document.getElementById('websiteContent');
+            
+            // 检查本地存储是否有密码记录
+            if(localStorage.getItem('loveSiteUnlocked') === 'true') {
+                passwordProtection.style.display = 'none';
+                websiteContent.style.display = 'block';
+            }
+            
+            passwordSubmit.addEventListener('click', function() {
+                if(passwordInput.value === correctPassword) {
+                    passwordProtection.style.display = 'none';
+                    websiteContent.style.display = 'block';
+                    localStorage.setItem('loveSiteUnlocked', 'true');
+                } else {
+                    alert('密码错误，请再试一次');
+                    passwordInput.value = '';
+                }
+            });
+            
+            // 按回车键也可以提交密码
+            passwordInput.addEventListener('keypress', function(e) {
+                if(e.key === 'Enter') {
+                    passwordSubmit.click();
+                }
+            });
+            
+            // 倒计时功能
+            function updateCountdowns() {
+                const now = new Date();
+                
+                // 相识纪念日倒计时 (5月20日)
+                const metDate = new Date(now.getFullYear(), 4, 20); // 月份是0-11
+                if(now > metDate) {
+                    metDate.setFullYear(metDate.getFullYear() + 1);
+                }
+                const metDiff = metDate - now;
+                const metDays = Math.floor(metDiff / (1000 * 60 * 60 * 24));
+                document.getElementById('met-countdown').textContent = `还有 ${metDays} 天`;
+                
+                // 恋爱纪念日倒计时 (1月1日)
+                const loveDate = new Date(now.getFullYear(), 0, 1);
+                if(now > loveDate) {
+                    loveDate.setFullYear(loveDate.getFullYear() + 1);
+                }
+                const loveDiff = loveDate - now;
+                const loveDays = Math.floor(loveDiff / (1000 * 60 * 60 * 24));
+                document.getElementById('love-countdown').textContent = `还有 ${loveDays} 天`;
+                
+                // 求婚纪念日倒计时 (2月14日)
+                const proposeDate = new Date(now.getFullYear(), 1, 14);
+                if(now > proposeDate) {
+                    proposeDate.setFullYear(proposeDate.getFullYear() + 1);
+                }
+                const proposeDiff = proposeDate - now;
+                const proposeDays = Math.floor(proposeDiff / (1000 * 60 * 60 * 24));
+                document.getElementById('propose-countdown').textContent = `还有 ${proposeDays} 天`;
+            }
+            
+            updateCountdowns();
+            setInterval(updateCountdowns, 86400000); // 每天更新一次
+            
+            // 音乐播放器功能
+            const loveSong = document.getElementById('love-song');
+            const playBtn = document.getElementById('play-btn');
+            const pauseBtn = document.getElementById('pause-btn');
+            
+            playBtn.addEventListener('click', function() {
+                loveSong.play();
+            });
+            
+            pauseBtn.addEventListener('click', function() {
+                loveSong.pause();
+            });
+            
+            // 留言板功能
+            const messageAuthor = document.getElementById('message-author');
+            const messageContent = document.getElementById('message-content');
+            const messageSubmit = document.getElementById('message-submit');
+            const messageList = document.getElementById('message-list');
+            
+            // 加载保存的留言
+            function loadMessages() {
+                const messages = JSON.parse(localStorage.getItem('loveMessages')) || [];
+                messageList.innerHTML = '';
+                
+                messages.forEach(function(message) {
+                    addMessageToDOM(message.author, message.content, message.date);
+                });
+            }
+            
+            // 添加留言到DOM
+            function addMessageToDOM(author, content, date) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message';
+                
+                const messageHeader = document.createElement('div');
+                messageHeader.className = 'message-header';
+                
+                const authorSpan = document.createElement('span');
+                authorSpan.className = 'message-author';
+                authorSpan.textContent = author;
+                
+                const dateSpan = document.createElement('span');
+                dateSpan.className = 'message-date';
+                dateSpan.textContent = new Date(date).toLocaleString();
+                
+                messageHeader.appendChild(authorSpan);
+                messageHeader.appendChild(dateSpan);
+                
+                const contentP = document.createElement('p');
+                contentP.textContent = content;
+                
+                messageDiv.appendChild(messageHeader);
+                messageDiv.appendChild(contentP);
+                
+                messageList.appendChild(messageDiv);
+            }
+            
+            // 提交新留言
+            messageSubmit.addEventListener('click', function() {
+                const author = messageAuthor.value.trim();
+                const content = messageContent.value.trim();
+                
+                if(author && content) {
+                    const messages = JSON.parse(localStorage.getItem('loveMessages')) || [];
+                    const newMessage = {
+                        author: author,
+                        content: content,
+                        date: new Date().toISOString()
+                    };
+                    
+                    messages.push(newMessage);
+                    localStorage.setItem('loveMessages', JSON.stringify(messages));
+                    
+                    addMessageToDOM(author, content, new Date());
+                    
+                    messageAuthor.value = '';
+                    messageContent.value = '';
+                } else {
+                    alert('请填写名字和留言内容');
+                }
+            });
+            
+            // 初始化加载留言
+            loadMessages();
+            
+            // 替换示例图片为你们自己的照片
+            // 你可以将照片上传到图床(如imgur)后替换上面的图片链接
+        });
+    </script>
+</body>
+</html>
